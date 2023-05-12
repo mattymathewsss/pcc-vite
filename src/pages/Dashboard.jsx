@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getComments } from '../api/api';
 import Card from '../components/Card';
 import MainContainer from '../containers/MainContainer';
 
 const Dashboard = () => {
-  const animes = [
-    {
-      title: 'One Piece',
-      genre: 'adventure',
-      author: 'E. Oda',
-      isCensored: true,
-    },
-    {
-      title: 'Bleach',
-      genre: 'fantasy',
-      author: 'K. Tite',
-      isCensored: true,
-    },
-    {
-      title: 'Naruto',
-      genre: 'adventure',
-      author: 'M. Kishimoto',
-      isCensored: false,
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      try {
+        const { data, status } = await getComments(page);
+        setPosts(data);
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchPosts();
+  }, [page]);
+
+  const button1Handler = () => {
+    setPage(1);
+  };
+
+  const button2Handler = () => {
+    setPage(2);
+  };
+
   return (
     <MainContainer>
-      {animes.map((anime) => (
-        <Card key={anime.title}>
-          <h1>{anime.title}</h1>
-          <h2>{anime.genre}</h2>
-          <h2>{anime.author}</h2>
-          <h3>{anime.isCensored ? 'Efas' : 'Nic3'}</h3>
+      <button onClick={button1Handler}>set page to 1</button>
+      <button onClick={button2Handler}>set page to 2</button>
+      {posts.map((post) => (
+        <Card key={post.id}>
+          <h1>{post.title}</h1>
+          <p>{post.body}</p>
         </Card>
       ))}
     </MainContainer>
