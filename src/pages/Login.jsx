@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Form from '../components/Form';
 
 const Login = () => {
@@ -6,13 +7,13 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  let navigate = useNavigate();
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
-      setIsVisible(true);
-      setIsLoading(false);
-
+      navigate('/');
       return clearTimeout();
     }, 3000);
   };
@@ -55,21 +56,6 @@ const Login = () => {
         inputs={inputs}
         isLoading={isLoading}
       />
-      {isLoading ? 'Loading.....' : null}
-
-      {isVisible && (
-        <div style={{ textAlign: 'center' }}>
-          {details.map((detail) => (
-            <p>
-              <span>
-                <b>{detail.name}</b>
-              </span>
-              &nbsp;
-              {detail.value}
-            </p>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
